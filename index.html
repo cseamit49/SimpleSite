@@ -1,52 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head></head>
-<body bgcolor="gold" font-color="red">
- 
-<table border='0' width='480px' cellpadding='0' cellspacing='0' align='center'>
-<center><tr>
-   <td><h1>Registration Form For Sports</h1></td>
-</tr><center>
- 
-<table border='0' width='480px' cellpadding='0' cellspacing='0' align='center'>
-<tr>
-    <td align='center'>Name:</td>
-    <td><input type='text' name='name'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<tr>
-    <td align='center'>Sur Name:</td>
-    <td><input type='text' name='name'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<tr>
-    <td align='center'>Date Of Birth:</td>
-    <td><input type='text' name='name'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<tr>
-    <td align='center'>Address:</td>
-    <td><input type='text' name='name'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<tr>
-    <td align='center'>Phone:</td>
-    <td><input type='text' name='name'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<tr>
-    <td align='center'>Email:</td>
-    <td><input type='text' name='name'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<tr>
-    <td align='center'>Zip:</td>
-    <td><input type='text' name='zip'></td>
-</tr>
-<tr> <td>&nbsp;</td> </tr>
-<table border='0' cellpadding='0' cellspacing='0' width='480px' align='center'>
-<tr>
-    <td align='center'><input type='submit' name='REGISTER' value="register"></td>
-</tr>
-</table>
-</table>
+<head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.17.0/full/pyodide.js"></script>
+</head>
+
+<body>
+  <p>You can execute any Python code. Just enter something in the box below and click the button.</p>
+  <input id='code' value='sum([1, 2, 3, 4, 5])'>
+  <button onclick='evaluatePython()'>Run</button>
+  <br>
+  <br>
+  <div>
+    Output:
+  </div>
+  <textarea id='output' style='width: 100%;' rows='6' disabled></textarea>
+
+  <script>
+    const output = document.getElementById("output");
+    const code = document.getElementById("code");
+
+    function addToOutput(s) {
+      output.value += '>>>' + code.value + '\n' + s + '\n';
+    }
+
+    output.value = 'Initializing...\n';
+    // init Pyodide
+    async function main(){
+      await loadPyodide({ indexURL : 'https://cdn.jsdelivr.net/pyodide/v0.17.0/full/' });
+      output.value += 'Ready!\n';
+    }
+    let pyodideReadyPromise = main();
+
+    async function evaluatePython() {
+      await pyodideReadyPromise;
+      try {
+        let output = await pyodide.runPythonAsync(code.value);
+        addToOutput(output);
+      } catch(err) {
+        addToOutput(err);
+      }
+    }
+  </script>
+</body>
